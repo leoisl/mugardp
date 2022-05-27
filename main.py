@@ -1,10 +1,8 @@
 import random
-import sys
 
 
 def error_out():
-    print("Da mais nao mano, nao consigo mais fazer time")
-    sys.exit(0)
+    raise ValueError("Da mais nao mano, nao consigo mais fazer time")
 
 
 def get_sample_with_unique_players(box):
@@ -33,6 +31,13 @@ def draw(forwards_box, midfielders_box):
 
     return forwards + midfielders
 
+def output_games(original_forwards_box, original_midfielders_box, number_of_draws):
+    forwards_box = list(original_forwards_box)
+    midfielders_box = list(original_midfielders_box)
+    for draw_index in range(number_of_draws):
+        game = draw(forwards_box, midfielders_box)
+        print(f"Jogo #{draw_index + 1} = {game}")
+
 
 def main():
     forwards_box = []
@@ -48,10 +53,15 @@ def main():
         box = forwards_box if tipo=="A" else midfielders_box
         box.extend([nome]*frequencia)
 
-    number_of_draws = int(input("Quantos jogos quer? "))
-    for draw_index in range(number_of_draws):
-        game = draw(forwards_box, midfielders_box)
-        print(f"Jogo #{draw_index+1} = {game}")
-
+    while True:
+        number_of_draws = input("Nova draw, quantos jogos quer (Fim para terminar)? ")
+        if number_of_draws.lower() == "fim":
+            break
+        number_of_draws = int(number_of_draws)
+        try:
+            output_games(forwards_box, midfielders_box, number_of_draws)
+        except ValueError:
+            print("Nao consigo mais fazer jogos.")
+            pass
 
 main()
